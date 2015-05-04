@@ -18,15 +18,20 @@ public interface PdfFileToImagesConverter {
 	 * @param imagesDestinationPath
 	 *            String which represents the path to the directory where the
 	 *            images will be placed
+	 * @param imageFormat
+	 *            format of the output images
 	 * @pre pdfFilePath is not null and the file represented on it exists
 	 * @pre imagesDestinationPath is not null and the path represented on it
 	 *      exists
+	 * @pre imageFormat is not null
 	 * @post Images which are stored in {@source imagesDestinationPath} keep the
-	 *       order of the pdf pages in their name
+	 *       order of the pdf pages in their name by adding an underscore and
+	 *       the page number page number
 	 * @throws FailedConversionException
 	 *             if there is an error reading pdfFile or creating the images
 	 */
-	void convertPdfFileToImages(String pdfFilePath, String imagesDestinationPath)
+	void convertPdfFileToImages(String pdfFilePath,
+			String imagesDestinationPath, ImageFileFormat imageFormat)
 			throws FailedConversionException;
 
 }
