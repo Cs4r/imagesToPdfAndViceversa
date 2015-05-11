@@ -28,7 +28,8 @@ public interface PdfFileToImagesConverter {
 	 *       order of the pdf pages in their name by adding an underscore and
 	 *       the page number page number
 	 * @throws FailedConversionException
-	 *             if there is an error reading pdfFile or creating the images
+	 *             if there is an error reading the pdf file or creating the
+	 *             images
 	 */
 	void convertPdfFileToImages(String pdfFilePath,
 			String imagesDestinationPath, ImageFileFormat imageFormat)
