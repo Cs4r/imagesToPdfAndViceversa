@@ -14,6 +14,7 @@ import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 
 import org.apache.commons.io.FilenameUtils;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -23,7 +24,7 @@ import cs4r.tools.imagestopdf.converter.ImageFileFormat;
 import cs4r.tools.imagestopdf.converter.exception.FailedConversionException;
 
 /**
- * Tests for {@link PdfFileToImagesConverterImpl}
+ * Tests for {@link PdfFileToImagesConverterImpl}.
  * 
  * @author cs4r
  *
@@ -33,26 +34,36 @@ public class PdfFileToImagesConverterImplTest {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(PdfFileToImagesConverterImplTest.class);
-	private static final int PDF_FILE_PAGES = 5;
+
 	private static final String PDF_FILE = ClassLoader.getSystemClassLoader()
-			.getResource("resources/test-pdf-file.pdf").getPath();
-	private static final String IMAGES_DIRECTORY = ClassLoader
-			.getSystemClassLoader().getResource("resources/test-images-dir")
+			.getResource("resources/test-images-dir/input/test-file.pdf")
 			.getPath();
+
+	private static final String IMAGES_DIRECTORY = ClassLoader
+			.getSystemClassLoader()
+			.getResource("resources/test-images-dir/output").getPath();
 
 	private static final String FAKE_PDF_FILE = ClassLoader
-			.getSystemClassLoader().getResource("resources/fake_pdf.txt")
+			.getSystemClassLoader()
+			.getResource("resources/test-images-dir/input/fake-pdf.txt")
 			.getPath();
 
+	private static final int PDF_FILE_PAGES = 5;
 	private static final String WRONG_DESTINATION_DIRECTORY = "wrong_destination_directory";
 	private static final String WRONG_PDF_FILE = "wrong_pdf_file.pdf";
+	private PdfFileToImagesConverterImpl pdfFileToImagesConverterImpl = new PdfFileToImagesConverterImpl();
+
+	@Before
+	public void setUp() {
+		pdfFileToImagesConverterImpl = new PdfFileToImagesConverterImpl();
+	}
 
 	@Test(expected = NullPointerException.class)
 	@Parameters(method = "nullParametersCombinations")
 	public void testConvertPdfFileToImagesWithNullParameters(
 			String pdfFilePath, String imagesDestinationPath,
 			ImageFileFormat imageFormat) throws FailedConversionException {
-		new PdfFileToImagesConverterImpl().convertPdfFileToImages(pdfFilePath,
+		pdfFileToImagesConverterImpl.convertPdfFileToImages(pdfFilePath,
 				imagesDestinationPath, imageFormat);
 	}
 
@@ -71,7 +82,7 @@ public class PdfFileToImagesConverterImplTest {
 	public void testConvertPdfFileToImagesWithNonExistentFiles(
 			String pdfFilePath, String imagesDestinationPath,
 			ImageFileFormat imageFormat) throws FailedConversionException {
-		new PdfFileToImagesConverterImpl().convertPdfFileToImages(pdfFilePath,
+		pdfFileToImagesConverterImpl.convertPdfFileToImages(pdfFilePath,
 				imagesDestinationPath, imageFormat);
 	}
 
@@ -90,8 +101,8 @@ public class PdfFileToImagesConverterImplTest {
 	@Test(expected = FailedConversionException.class)
 	public void testConversionWithFakePdfFile()
 			throws FailedConversionException {
-		new PdfFileToImagesConverterImpl().convertPdfFileToImages(
-				FAKE_PDF_FILE, IMAGES_DIRECTORY, BasicImageFormat.JPEG);
+		pdfFileToImagesConverterImpl.convertPdfFileToImages(FAKE_PDF_FILE,
+				IMAGES_DIRECTORY, BasicImageFormat.JPEG);
 	}
 
 	@Test
@@ -99,7 +110,7 @@ public class PdfFileToImagesConverterImplTest {
 	public void testConversionWithMultipleImageFormats(
 			ImageFileFormat imageFileFormat) throws FailedConversionException {
 
-		new PdfFileToImagesConverterImpl().convertPdfFileToImages(PDF_FILE,
+		pdfFileToImagesConverterImpl.convertPdfFileToImages(PDF_FILE,
 				IMAGES_DIRECTORY, imageFileFormat);
 
 		assertConversionFulfillInterfaceContract(imageFileFormat);
@@ -108,8 +119,8 @@ public class PdfFileToImagesConverterImplTest {
 	}
 
 	private Object[] supportedImageFormats() {
-		return new Object[] { BasicImageFormat.BMP, BasicImageFormat.GIF,
-				BasicImageFormat.JPEG, BasicImageFormat.JPG
+		return new Object[] { BasicImageFormat.GIF, BasicImageFormat.JPEG,
+				BasicImageFormat.JPG
 
 		};
 	}
